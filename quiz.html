@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Game Application</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111827;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: #1f2937;
+      padding: 30px;
+      border-radius: 12px;
+      width: 400px;
+      text-align: center;
+      box-shadow: 0px 0px 15px rgba(0,0,0,0.5);
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    .option {
+      display: block;
+      background: #374151;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .option:hover {
+      background: #4b5563;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      background: #2563eb;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h2 id="question">Question text</h2>
+    <div id="options"></div>
+    <button id="nextBtn">Next</button>
+    <h3 id="score" style="display:none;"></h3>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "What is the capital of France?",
+        options: ["Berlin", "Paris", "Rome", "Madrid"],
+        correct: "Paris"
+      },
+      {
+        question: "Which language is used for web development?",
+        options: ["Python", "C++", "JavaScript", "Swift"],
+        correct: "JavaScript"
+      },
+      {
+        question: "2 + 2 = ?",
+        options: ["3", "4", "5", "6"],
+        correct: "4"
+      },
+      {
+        question: "Which planet is known as the Red Planet?",
+        options: ["Earth", "Mars", "Jupiter", "Venus"],
+        correct: "Mars"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let selectedAnswer = "";
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const nextBtn = document.getElementById("nextBtn");
+    const scoreEl = document.getElementById("score");
+
+    function loadQuestion() {
+      selectedAnswer = "";
+      let q = quizData[currentQuestion];
+      questionEl.textContent = q.question;
+      optionsEl.innerHTML = "";
+      q.options.forEach(option => {
+        const btn = document.createElement("div");
+        btn.classList.add("option");
+        btn.textContent = option;
+        btn.onclick = () => {
+          selectedAnswer = option;
+          document.querySelectorAll(".option").forEach(opt => opt.style.background = "#374151");
+          btn.style.background = "#16a34a"; // highlight selected
+        };
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    nextBtn.addEventListener("click", () => {
+      if (selectedAnswer === "") {
+        alert("Please select an answer!");
+        return;
+      }
+      if (selectedAnswer === quizData[currentQuestion].correct) {
+        score++;
+      }
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+      } else {
+        document.querySelector(".quiz-container").innerHTML = `
+          <h2>Quiz Completed 🎉</h2>
+          <h3>Your Score: ${score} / ${quizData.length}</h3>
+          <button onclick="location.reload()">Restart</button>
+        `;
+      }
+    });
+
+    loadQuestion();
+  </script>
+</body>
+</html>
